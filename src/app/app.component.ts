@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
+import { MessageListComponent } from './components/message-list/message-list.component';
 
 @Component({
   selector: 'app-root',
-  imports: [],
+  standalone: true,
+  imports: [MessageListComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

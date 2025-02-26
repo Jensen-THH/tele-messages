@@ -1,0 +1,45 @@
+.neon-input {
+    background: #1a1a33;
+    border: 1px solid #ff00ff;
+    color: #00ffcc;
+    box-shadow: 0 0 5px #ff00ff;
+    transition: all 0.3s ease;
+  }
+  
+  .neon-input:focus {
+    border-color: #00ffcc;
+    box-shadow: 0 0 10px #00ffcc;
+    outline: none;
+  }
+  
+  .neon-btn {
+    background: #ff00ff;
+    color: #00ffcc;
+    border: none;
+    box-shadow: 0 0 10px #ff00ff;
+    transition: all 0.3s ease;
+  }
+  
+  .neon-btn:hover {
+    background: #00ffcc;
+    color: #ff00ff;
+    box-shadow: 0 0 20px #00ffcc;
+  }
+  
+  .form-check-input {
+    accent-color: #ff00ff;
+  }
+  
+  .img-fluid {
+    max-width: 100%;
+    border: 1px solid #00ffcc;
+    box-shadow: 0 0 10px #00ffcc;
+  }
+  
+  .limit-text {
+    display: inline-block;
+    max-width: 100%; /* Giới hạn chiều rộng theo thẻ cha */
+    white-space: nowrap; /* Ngăn xuống dòng */
+    overflow: hidden; /* Ẩn phần vượt quá */
+    text-overflow: ellipsis; /* Thêm dấu ba chấm khi bị cắt */
+  }

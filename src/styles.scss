@@ -1,1 +1,42 @@
-/* You can add global styles to this file, and also import other style files */
+/* styles.scss */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+body {
+  background: #0d0d1a; /* Nền tối kiểu cyberpunk */
+  color: #e0e0e0;
+  font-family: 'Orbitron', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.neon-text {
+  color: #00ffcc; /* Xanh neon */
+  text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc, 0 0 20px #ff00ff; /* Glow effect */
+}
+
+.neon-card {
+  background: rgba(20, 20, 40, 0.8);
+  border: 2px solid #ff00ff; /* Viền neon tím */
+  box-shadow: 0 0 15px #ff00ff, 0 0 30px #00ffcc;
+  border-radius: 8px;
+  padding: 15px;
+  transition: all 0.3s ease;
+}
+
+.neon-card:hover {
+  box-shadow: 0 0 25px #ff00ff, 0 0 50px #00ffcc; /* Hiệu ứng hover */
+}
+
+.glitch {
+  position: relative;
+  animation: glitch 1s infinite;
+}
+
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(2px, -2px); }
+  60% { transform: translate(-1px, 1px); }
+  80% { transform: translate(1px, -1px); }
+  100% { transform: translate(0); }
+}
