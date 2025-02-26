@@ -1,15 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../services/api.service';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-message-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './message-list.component.html',
-  styleUrls: ['./message-list.component.scss']
+  styleUrls: ['./message-list.component.scss'],
+  animations: [
+    trigger('fadeInOut', [
+      state('void', style({ opacity: 0 })),
+      transition('void <=> *', animate('300ms ease-in-out'))
+    ])
+  ]
 })
 export class MessageListComponent {
   messages: any[] = [];
@@ -24,6 +30,7 @@ export class MessageListComponent {
     fetch_username: false,
     from_user: ''
   };
+  selectedMessage: any = null; 
 
   constructor(private apiService: ApiService) { }
 
@@ -48,5 +55,20 @@ export class MessageListComponent {
         console.error('Error fetching messages:', error);
       }
     });
+  }
+
+  // Sự kiện khi click vào card
+  showDetails(message: any): void {
+    this.selectedMessage = message;
+  }
+
+  // Đóng popup
+  closePopup(): void {
+    this.selectedMessage = null;
+  }
+ 
+  @HostListener('document:keydown.escape', ['$event'])
+  onKeydownHandler(): void {
+    this.closePopup();
   }
 }
