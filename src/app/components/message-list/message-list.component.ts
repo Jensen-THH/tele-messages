@@ -1,13 +1,17 @@
 import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../services/api.service';
+import { LoadingService } from '../../services/loading.service'; // Thêm import
+import { LoadingComponent } from '../loading/loading.component'; // Thêm import
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-message-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HttpClientModule, LoadingComponent], // Thêm LoadingComponent
   templateUrl: './message-list.component.html',
   styleUrls: ['./message-list.component.scss'],
   animations: [
@@ -30,11 +34,18 @@ export class MessageListComponent {
     fetch_username: false,
     from_user: ''
   };
-  selectedMessage: any = null; 
+  selectedMessage: any = null;
+  isLoading$!: Observable<boolean>; // Subscribe trạng thái loading
 
-  constructor(private apiService: ApiService) { }
+  constructor(
+    private apiService: ApiService,
+    private loadingService: LoadingService // Inject LoadingService
+  ) {
+    this.isLoading$ = this.loadingService.isLoading$;
+  }
 
   searchMessages(): void {
+    this.loadingService.show(); // Bật loading
     const params: any = {
       chat_id: this.searchParams.chat_id,
       limit: this.searchParams.limit.toString(),
@@ -50,23 +61,23 @@ export class MessageListComponent {
     this.apiService.getMessages(params).subscribe({
       next: (response) => {
         this.messages = response.data || [];
+        this.loadingService.hide(); // Tắt loading khi xong
       },
       error: (error) => {
         console.error('Error fetching messages:', error);
+        this.loadingService.hide(); // Tắt loading khi lỗi
       }
     });
   }
 
-  // Sự kiện khi click vào card
   showDetails(message: any): void {
     this.selectedMessage = message;
   }
 
-  // Đóng popup
   closePopup(): void {
     this.selectedMessage = null;
   }
- 
+
   @HostListener('document:keydown.escape', ['$event'])
   onKeydownHandler(): void {
     this.closePopup();
