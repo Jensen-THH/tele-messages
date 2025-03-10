@@ -1,0 +1,55 @@
+<div class="cyberpunk-container">
+    <ng-container *ngIf="vm$ | async as vm">
+      <ng-container *ngIf="paginationService.messages$ | async as response">
+        <div class="table-wrapper">
+          <table class="cyberpunk-table" *ngIf="response.status === 'success' && response.data; else error">
+            <thead>
+              <tr>
+                <th>Text</th>
+                <th>Date</th>
+                <th>User</th>
+                <th>Reactions</th>
+                <th>Link</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let msg of response.data">
+                <td class="truncate">{{ msg.text }}</td>
+                <td>{{ msg.date }}</td>
+                <td>{{ msg.user_name }}</td>
+                <td>{{ msg.total_reactions }}</td>
+                <td><a href="{{ msg.message_link }}" target="_blank" class="cyberpunk-link">View</a></td>
+                <td>
+                  <button class="cyberpunk-btn cyberpunk-btn-delete" (click)="onDelete(msg._id)">Delete</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <ng-template #error>
+          <p class="cyberpunk-error">{{ response.message || 'No data available' }}</p>
+        </ng-template>
+      </ng-container>
+    </ng-container>
+
+    <!-- Thanh cố định dưới màn hình -->
+    <ng-container *ngIf="vm$ | async as vm">
+      <ng-container *ngIf="paginationService.messages$ | async as response">
+        <div>
+          <!-- Thông tin phân trang -->
+          <div class="cyberpunk-info">
+            <p>Page: {{ vm.currentPage + 1 }} | Size: {{ vm.currentSize }} | Total: {{ vm.totalCount }}</p>
+          </div>
+          <!-- Điều khiển phân trang -->
+          <div class="cyberpunk-controls">
+            <button class="cyberpunk-btn" (click)="onPageChanged(vm.currentPage - 1)" [disabled]="vm.currentPage === 0">Previous</button>
+            <button class="cyberpunk-btn" (click)="onPageChanged(vm.currentPage + 1)" [disabled]="vm.totalCount <= (vm.currentPage + 1) * vm.currentSize">Next</button>
+            <select class="cyberpunk-select" (change)="onSizeChanged($event)" [value]="vm.currentSize || 10">
+              <option *ngFor="let size of [5, 10, 20]" [value]="size">{{ size }}</option>
+            </select>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>

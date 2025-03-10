@@ -1,0 +1,226 @@
+
+:host {
+    display: block;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%);
+  }
+
+  .cyberpunk-container {
+    padding: 20px;
+    padding-bottom: 120px; /* Khoảng cách để không bị che bởi footer */
+    background: rgba(13, 13, 13, 0.9);
+    color: #00ffcc;
+    font-family: 'Courier New', Courier, monospace;
+    border: 2px solid #00ffcc;
+    box-shadow: 0 0 15px #00ffcc, 0 0 30px #ff00ff inset;
+    border-radius: 8px;
+    max-width: 95%;
+    margin: 20px auto;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+    border: 1px solid #ff00ff;
+    border-radius: 5px;
+  }
+
+  .cyberpunk-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #0d0d0d;
+    position: relative;
+  }
+
+  .cyberpunk-table th,
+  .cyberpunk-table td {
+    padding: 12px;
+    border: 1px solid #ff00ff;
+    text-align: left;
+    font-size: 14px;
+  }
+
+  .cyberpunk-table th {
+    background: #1a1a1a;
+    color: #ff00ff;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-shadow: 0 0 5px #ff00ff;
+    position: sticky !important;
+  }
+
+  .cyberpunk-table td {
+    color: #00ffcc;
+    transition: background 0.3s;
+  }
+
+  .cyberpunk-table tr:hover td {
+    background: rgba(255, 0, 255, 0.1);
+    box-shadow: 0 0 10px #ff00ff inset;
+  }
+
+  .truncate {
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cyberpunk-link {
+    color: #00ffcc;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+
+  .cyberpunk-link:hover {
+    color: #ff00ff;
+    text-shadow: 0 0 10px #ff00ff;
+  }
+
+  .cyberpunk-error {
+    color: #ff5555;
+    text-shadow: 0 0 5px #ff5555;
+    text-align: center;
+    padding: 10px;
+    font-size: 16px;
+  }
+
+  /* Thanh cố định ở cuối */
+  .cyberpunk-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(13, 13, 13, 0.95);
+    border-top: 2px solid #00ffcc;
+    box-shadow: 0 -5px 15px #00ffcc;
+    padding: 10px;
+    z-index: 1000; /* Đảm bảo nằm trên cùng */
+  }
+
+  .cyberpunk-info {
+    margin: 0;
+    padding: 5px 0;
+    background: rgba(0, 255, 204, 0.1);
+    border: 1px dashed #00ffcc;
+    border-radius: 5px;
+    text-align: center;
+    text-shadow: 0 0 5px #00ffcc;
+    font-size: 16px;
+  }
+
+  .cyberpunk-controls {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+
+  .cyberpunk-btn {
+    padding: 10px 20px;
+    background: linear-gradient(45deg, #1a1a1a, #333333);
+    color: #00ffcc;
+    border: 2px solid #ff00ff;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    animation: neonPulse 2s infinite alternate;
+  }
+
+  .cyberpunk-btn:hover:not(:disabled) {
+    background: linear-gradient(45deg, #ff00ff, #00ffcc);
+    color: #0d0d0d;
+    box-shadow: 0 0 15px #ff00ff, 0 0 25px #00ffcc;
+  }
+
+  .cyberpunk-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    animation: none;
+  }
+
+  .cyberpunk-btn-delete {
+    border-color: #ff5555;
+    color: #ff5555;
+  }
+
+  .cyberpunk-btn-delete:hover:not(:disabled) {
+    background: linear-gradient(45deg, #ff5555, #ff00ff);
+    color: #0d0d0d;
+    box-shadow: 0 0 15px #ff5555;
+  }
+
+  .cyberpunk-select {
+    padding: 10px;
+    background: #1a1a1a;
+    color: #00ffcc;
+    border: 2px solid #ff00ff;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+  }
+
+  .cyberpunk-select:hover {
+    box-shadow: 0 0 15px #ff00ff;
+  }
+
+  @keyframes neonPulse {
+    0% { box-shadow: 0 0 5px #ff00ff; }
+    100% { box-shadow: 0 0 15px #00ffcc; }
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .cyberpunk-table th,
+    .cyberpunk-table td {
+      padding: 8px;
+      font-size: 12px;
+    }
+
+    .truncate {
+      max-width: 150px;
+    }
+
+    .cyberpunk-controls {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .cyberpunk-btn,
+    .cyberpunk-select {
+      width: 100%;
+      max-width: 200px;
+    }
+
+    .cyberpunk-info {
+      font-size: 14px;
+    }
+
+    .cyberpunk-container {
+      padding-bottom: 140px; /* Tăng padding cho footer cao hơn */
+    }
+  }
+
+  @media (max-width: 480px) {
+    .cyberpunk-table th,
+    .cyberpunk-table td {
+      padding: 6px;
+      font-size: 10px;
+    }
+
+    .truncate {
+      max-width: 100px;
+    }
+
+    .cyberpunk-btn,
+    .cyberpunk-select {
+      padding: 8px;
+      font-size: 12px;
+    }
+
+    .cyberpunk-container {
+      padding-bottom: 160px; /* Tăng thêm cho mobile */
+    }
+  }
