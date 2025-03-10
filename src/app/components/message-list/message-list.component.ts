@@ -6,7 +6,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 import { Observable } from 'rxjs';
 import { BaseComponent } from '../../shared/components/base/base.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MessageDetail } from '../../shared/interfaces/message-detail';
+import { MessageDetail, SearchParams } from '../../shared/interfaces/interfaces';
 
 @Component({
   selector: 'app-message-list',
@@ -23,16 +23,16 @@ import { MessageDetail } from '../../shared/interfaces/message-detail';
 })
 export class MessageListComponent extends BaseComponent {
   messages: MessageDetail[] = [];
-  searchParams = {
+  searchParams: SearchParams = {
     chat_id: 'nghienplusofficial',
     offset_date: '',
     end_date: '',
     keyword: '',
     limit: 10,
     img_flag: false,
-    topic_id: null as number | null,
+    topic_id: null,
     fetch_username: false,
-    from_user: ''
+    from_user: '',
   };
   selectedMessage: any = null;
 
