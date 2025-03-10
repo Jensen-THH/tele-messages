@@ -59,18 +59,17 @@
             <button type="submit" class="btn neon-btn w-100">Search</button>
         </form>
     </div>
-    <!-- Loading -->
-    <app-loading [isLoading]="(isLoading$ | async) ?? false"></app-loading>
+   
     <!-- Hiển thị kết quả -->
     <div class="row cards-container">
         <div class="col-md-4 mb-3" *ngFor="let message of messages">
             <div class="neon-card" (click)="showDetails(message)">
                 <p><strong class="neon-text">ID:</strong> {{ message.message_id }}</p>
                 <p><strong class="neon-text">User:</strong> <span [title]="message.user_name || 'Unknown'">{{
-                        message.user_name || 'Unknown' }}</span></p>
+                        message.user_name }}</span></p>
                 <p><strong class="neon-text">Text:</strong> <span [title]="message.text" class="limit-lines">{{
                         message.text }}</span></p>
-                <p><strong class="neon-text">Date (VN):</strong> {{ message.date_vn }}</p>
+                <p><strong class="neon-text">Date (VN):</strong> {{ message.date_vn | date: 'dd/MM/yyyy HH:mm:ss' }}</p>
                 <p *ngIf="message.views"><strong class="neon-text">View:</strong> {{ message.views }}</p>
                 <p *ngIf="message.reactions"><strong class="neon-text">Reactions:</strong> {{ message.reactions | json
                     }}</p>
