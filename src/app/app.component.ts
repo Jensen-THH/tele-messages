@@ -4,10 +4,11 @@ import { LoadingComponent } from './components/loading/loading.component';
 import { Observable } from 'rxjs';
 import { LoadingService } from './services/loading.service';
 import { CommonModule } from '@angular/common';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [MessageListComponent, LoadingComponent, CommonModule],
+  imports: [ LoadingComponent, CommonModule, RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
