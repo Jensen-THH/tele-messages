@@ -1,18 +1,22 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { MessageDetail, ViewModel } from '../../shared/interfaces/interfaces';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { FilterQuery, MessageDetail, ViewModel } from '../../shared/interfaces/interfaces';
 import { PaginationService } from '../../services/pagination.service';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-messages-db',
-  imports: [CommonModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './messages-db.component.html',
-  styleUrl: './messages-db.component.scss'
+  styleUrls: ['./messages-db.component.scss']
 })
-export class MessagesDbComponent {
+export class MessagesDbComponent implements OnInit {
   vm$!: Observable<ViewModel>;
+  filterQuery: FilterQuery = {};
+  sortBy: string = '';
 
   constructor(public paginationService: PaginationService) { }
 
@@ -21,15 +25,21 @@ export class MessagesDbComponent {
       this.paginationService.currentPage$,
       this.paginationService.currentSize$,
       this.paginationService.totalCount$,
-      this.paginationService.currentOffset$
+      this.paginationService.filterQuery$,
+      this.paginationService.sortBy$
     ] as const).pipe(
-      map(([currentPage, currentSize, totalCount, currentOffset]) => ({
+      map(([currentPage, currentSize, totalCount, filterQuery, sortBy]) => ({
         currentPage,
         currentSize,
         totalCount,
-        currentOffset
+        filterQuery,
+        sortBy,
       }))
     );
+
+    this.paginationService.updatePage(0);
+    this.paginationService.updateSize(5);
+    this.updateFilters();
   }
 
   onPageChanged(newPage: number) {
@@ -38,13 +48,23 @@ export class MessagesDbComponent {
 
   onSizeChanged(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
-    const newSize = +selectElement.value; // Chuyển sang number
+    const newSize = +selectElement.value;
     this.paginationService.updateSize(newSize);
   }
 
   onDelete(messageId: string) {
-    // Logic xóa (gọi API hoặc cập nhật local data)
     console.log(`Delete message with ID: ${messageId}`);
-    // Ví dụ: this.paginationService.deleteMessage(messageId).subscribe();
+  }
+
+  updateFilters() {
+    const cloneFilter: FilterQuery = { ...this.filterQuery };
+    if (typeof this.filterQuery.text === 'string' && this.filterQuery.text.trim() !== '') {
+      cloneFilter.text = { $regex: this.filterQuery.text.trim(), $options: "i" };
+    } else {
+      delete cloneFilter.text;
+    }
+
+    this.paginationService.updateFilterQuery(cloneFilter);
+    this.paginationService.updateSortBy(this.sortBy || null);
   }
 }
