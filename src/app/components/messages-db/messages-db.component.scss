@@ -1,4 +1,3 @@
-/* Đảm bảo toàn bộ trang vừa với viewport */
 html, body {
   height: 100%;
   margin: 0;
@@ -6,7 +5,7 @@ html, body {
 }
 
 .cyberpunk-container {
-  padding: 10px; /* Giảm padding cho màn hình nhỏ */
+  padding: 10px;
   background: #0d0d1a;
   color: #fff;
   font-family: 'Courier New', Courier, monospace;
@@ -30,8 +29,6 @@ html, body {
   border-collapse: collapse;
   background: rgba(20, 20, 40, 0.9);
   box-shadow: 0 0 15px #00ffcc;
-
-  // thêm hiệu ứng thanh scroll  dọc mỏng
   scrollbar-width: thin;
   scrollbar-color: #00ffcc #0d0d1a;
 
@@ -44,17 +41,17 @@ html, body {
   background: #ff00ff;
   color: #0d0d1a;
   text-shadow: 0 0 5px #fff;
-  z-index: 1; /* Đảm bảo tiêu đề nằm trên nội dung */
+  z-index: 1;
 }
 
 .cyberpunk-table th, .cyberpunk-table td {
-  padding: 8px; /* Giảm padding cho gọn hơn */
+  padding: 8px;
   border: 1px solid #ff00ff;
   text-align: left;
 }
 
 .truncate {
-  max-width: 150px; /* Giảm max-width cho màn hình nhỏ */
+  max-width: 150px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -69,10 +66,9 @@ html, body {
   align-items: center;
   box-shadow: 0 -5px 15px #00ffcc;
   flex: 0 0 auto;
-  height: 60px; /* Chiều cao cố định */
+  height: 60px; 
 }
 
-/* Các kiểu khác */
 .cyberpunk-link {
   color: #00ffcc;
   text-decoration: none;
@@ -84,7 +80,7 @@ html, body {
 }
 
 .cyberpunk-btn {
-  padding: 4px 8px; /* Giảm kích thước nút */
+  padding: 4px 8px;
   background: #00ffcc;
   color: #0d0d1a;
   border: none;
@@ -109,7 +105,7 @@ html, body {
 
 .cyberpunk-filters {
   display: flex;
-  gap: 5px; /* Giảm gap cho màn hình nhỏ */
+  gap: 5px;
 }
 
 .cyberpunk-input {
@@ -142,27 +138,27 @@ html, body {
 }
 
 /* Responsive Design với Media Queries */
-@media (max-width: 768px) { /* Màn hình tablet và nhỏ hơn */
+@media (max-width: 768px) { 
   .cyberpunk-container {
     padding: 5px;
   }
 
   .table-wrapper {
-    max-height: calc(100vh - 120px); /* Tăng không gian cho footer trên mobile */
+    max-height: calc(100vh - 120px);
   }
 
   .cyberpunk-table th, .cyberpunk-table td {
     padding: 5px;
-    font-size: 12px; /* Giảm cỡ chữ */
+    font-size: 12px;
   }
 
   .truncate {
-    max-width: 100px; /* Giảm chiều rộng tối đa trên mobile */
+    max-width: 100px;
   }
 
   .cyberpunk-footer {
-    flex-direction: column; /* Xếp dọc trên mobile */
-    height: auto; /* Chiều cao linh hoạt */
+    flex-direction: column;
+    height: auto;
     padding: 5px;
   }
 
@@ -172,11 +168,11 @@ html, body {
   }
 
   .cyberpunk-input, .cyberpunk-select {
-    width: 100%; /* Chiếm toàn bộ chiều rộng */
+    width: 100%;
   }
 
   .cyberpunk-controls {
-    flex-wrap: wrap; /* Cho phép xuống dòng nếu cần */
+    flex-wrap: wrap;
     justify-content: center;
   }
 
@@ -191,9 +187,9 @@ html, body {
   }
 }
 
-@media (max-width: 480px) { /* Màn hình điện thoại nhỏ */
+@media (max-width: 480px) {
   .cyberpunk-table th, .cyberpunk-table td {
-    font-size: 10px; /* Giảm thêm cỡ chữ */
+    font-size: 10px;
   }
 
   .truncate {

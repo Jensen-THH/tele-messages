@@ -47,7 +47,7 @@
         </div>
         <div class="cyberpunk-info">
           <p>
-            Page: {{ vm.currentPage + 1 }} of {{ response.total_pages || 1 }} |
+            Page: {{ vm.currentPage + 1 }} of {{ getTotalPage(vm.totalCount, vm.currentSize) || 1 }} |
             Size: {{ vm.currentSize }} |
             Total: {{ response.total }} |
           </p>
@@ -55,10 +55,15 @@
         <div class="cyberpunk-controls">
           <button class="cyberpunk-btn" (click)="onPageChanged(vm.currentPage - 1)"
             [disabled]="vm.currentPage === 0">Previous</button>
+            <select class="cyberpunk-select" (change)="onPageSelected($event)" [value]="vm.currentPage">
+              <option *ngFor="let page of getPageNumbers(vm.totalCount, vm.currentSize)" [value]="page - 1">
+                Page {{ page }}
+              </option>
+            </select>
           <button class="cyberpunk-btn" (click)="onPageChanged(vm.currentPage + 1)"
             [disabled]="vm.totalCount <= (vm.currentPage + 1) * vm.currentSize">Next</button>
           <select class="cyberpunk-select" (change)="onSizeChanged($event)" [value]="vm.currentSize || 10">
-            <option *ngFor="let size of [5, 10, 20, 50]" [value]="size">{{ size }}</option>
+            <option *ngFor="let size of [5, 10, 20, 50, 100, 200, 500, 1000, 10000]" [value]="size">{{ size }}</option>
           </select>
         </div>
       </div>

@@ -53,6 +53,24 @@ export class MessagesDbComponent extends BaseComponent implements OnInit {
   onPageChanged(newPage: number) {
     this.paginationService.updatePage(newPage);
   }
+  getTotalPage(totalCount: number, currentSize: number): number {
+    return Math.ceil(totalCount / currentSize) || 1;
+  }
+  getPageNumbers(totalCount: number, currentSize: number): number[] {
+    const pages: number[] = [];
+    const totalPages = Math.ceil(totalCount / currentSize) || 1; // Đảm bảo ít nhất 1 trang
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+
+  onPageSelected(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const newPage = +selectElement.value; // Lấy giá trị trang từ dropdown
+    this.paginationService.updatePage(newPage);
+  }
+
 
   onSizeChanged(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
