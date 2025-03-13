@@ -105,3 +105,10 @@ export interface MessagePayload {
   page?: number;
   perPage?: number;
 }
+
+export interface ConfirmDialogData {
+  message?: string;
+  title?: string;
+  confirmText?: string;
+  cancelText?: string;
+}

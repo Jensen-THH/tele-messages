@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 import { BaseComponent } from '../../shared/components/base/base.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ApiService } from '../../services/api.service';
+import { DialogService } from '../../services/dialog.service';
 @Component({
   selector: 'app-messages-db',
   standalone: true,
@@ -18,6 +19,7 @@ import { ApiService } from '../../services/api.service';
 export class MessagesDbComponent extends BaseComponent implements OnInit {
   vm$!: Observable<ViewModel>;
   apiService = inject(ApiService);
+  dialogConfirm = inject(DialogService);
   filterQuery: FilterQuery = {};
   sortBy: string = '';
 
@@ -59,19 +61,30 @@ export class MessagesDbComponent extends BaseComponent implements OnInit {
   }
 
   onDelete(messageId: string) {
-    this.apiService.deleteMessage(messageId).pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
-      next: (res) => {
-        if (res.status === 'success') {
-          this.paginationService.removeMessage(messageId);
-        }
-      },
-      error: (err) => console.error('Delete failed:', err)
+    if (!messageId) return;
+    this.dialogConfirm.open({
+      title: 'Delete Message',
+      message: 'Are you sure you want to delete this message?',
+      confirmText: 'Delete',
+      cancelText: 'Cancel'
+    }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe((confirmed) => {
+      if (confirmed) {
+        this.apiService.deleteMessage(messageId).pipe(
+          takeUntilDestroyed(this.destroyRef)
+        ).subscribe({
+          next: (res) => {
+            if (res.status === 'success') {
+              this.paginationService.removeMessage(messageId);
+            }
+          },
+          error: (err) => console.error('Delete failed:', err)
+        });
+      }
     });
+
   }
 
-  
+
 
   updateFilters() {
     const cloneFilter: FilterQuery = { ...this.filterQuery };
