@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ConfirmDialogData } from './../../interfaces/interfaces'
-import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-dialog',
@@ -23,5 +23,18 @@ export class DialogComponent {
   @HostListener('document:keydown.escape', ['$event'])
   onKeydownHandler(): void {
     this.confirmed.emit(false);
+  }
+
+  @ViewChild('confirmButton') confirmButton!: ElementRef<HTMLButtonElement>;
+
+  ngAfterViewInit() {
+    this.confirmButton.nativeElement.focus();
+  }
+
+  @HostListener('document:keydown.enter', ['$event'])
+  onEnterKey(event: KeyboardEvent) {
+    if (this.confirmButton.nativeElement === document.activeElement || document.activeElement === document.body) {
+      this.onConfirm();
+    }
   }
 }

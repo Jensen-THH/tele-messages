@@ -4,7 +4,7 @@
       <p>{{ data.message }}</p>
       <div class="dialog-actions">
         <button class="btn-cancel" (click)="onCancel()">{{ data.cancelText || 'No' }}</button>
-        <button class="btn-confirm" (click)="onConfirm()">{{ data.confirmText || 'Yes' }}</button>
+        <button class="btn-confirm" #confirmButton (click)="onConfirm()">{{ data.confirmText || 'Yes' }}</button>
       </div>
     </div>
   </div>
