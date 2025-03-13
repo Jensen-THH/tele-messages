@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FilterQuery, MessageDetail, ViewModel } from '../../shared/interfaces/interfaces';
 import { PaginationService } from '../../services/pagination.service';
@@ -7,7 +7,7 @@ import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BaseComponent } from '../../shared/components/base/base.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-
+import { ApiService } from '../../services/api.service';
 @Component({
   selector: 'app-messages-db',
   standalone: true,
@@ -17,6 +17,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class MessagesDbComponent extends BaseComponent implements OnInit {
   vm$!: Observable<ViewModel>;
+  apiService = inject(ApiService);
   filterQuery: FilterQuery = {};
   sortBy: string = '';
 
@@ -58,8 +59,19 @@ export class MessagesDbComponent extends BaseComponent implements OnInit {
   }
 
   onDelete(messageId: string) {
-    console.log(`Delete message with ID: ${messageId}`);
+    this.apiService.deleteMessage(messageId).pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: (res) => {
+        if (res.status === 'success') {
+          this.paginationService.removeMessage(messageId);
+        }
+      },
+      error: (err) => console.error('Delete failed:', err)
+    });
   }
+
+  
 
   updateFilters() {
     const cloneFilter: FilterQuery = { ...this.filterQuery };

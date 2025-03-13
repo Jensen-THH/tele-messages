@@ -6,11 +6,19 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ApiService {
-  private apiUrl = 'http://localhost:8000/api/get_messages/';
+  private apiUrl = 'http://localhost:8000/api/';
 
   constructor(private http: HttpClient) { }
 
   getMessages(params: any): Observable<any> {
-    return this.http.get(this.apiUrl, { params });
+    return this.http.get(`${this.apiUrl}get_messages`, { params });
+  }
+
+  deleteMessage(messageId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}delete_messages/${messageId}`);
+  }
+
+  deleteMessages(messageIds: string[]): Observable<any> {
+    return this.http.post(`${this.apiUrl}delete_messages_by_ids`, { message_ids: messageIds });
   }
 }

@@ -92,8 +92,8 @@ export interface FilterQuery {
 
 export interface ApiResponse {
   status: 'success' | 'error';
-  data?: MessageDetail[];
-  total?: number;
+  data?: any[];
+  total?: any;
   total_pages?: number;
   message?: string;
 }

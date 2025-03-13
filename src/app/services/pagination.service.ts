@@ -4,19 +4,19 @@ import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { map, switchMap, distinctUntilChanged, catchError, shareReplay, debounceTime } from 'rxjs/operators';
 import { ApiResponse, FilterQuery, MessagePayload } from '../shared/interfaces/interfaces';
 import { of } from 'rxjs';
-
 @Injectable({
   providedIn: 'root'
 })
 export class PaginationService {
   private apiUrl = 'http://localhost:8000/api/messages_db/';
 
-  private pageSubject = new BehaviorSubject<number>(0);
+  public pageSubject = new BehaviorSubject<number>(0);
   private sizeSubject = new BehaviorSubject<number>(10);
   private totalCountSubject = new BehaviorSubject<number>(0);
   private filterQuerySubject = new BehaviorSubject<FilterQuery>({});
   private sortBySubject = new BehaviorSubject<string | null>(null);
   private limitSubject = new BehaviorSubject<number | null>(null);
+  private messagesSubject = new BehaviorSubject<ApiResponse>({ status: 'success', data: [], total: 0 });
 
   currentPage$: Observable<number> = this.pageSubject.asObservable().pipe(distinctUntilChanged());
   currentSize$: Observable<number> = this.sizeSubject.asObservable().pipe(distinctUntilChanged());
@@ -25,53 +25,68 @@ export class PaginationService {
     debounceTime(500),
     distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr))
   );
-  sortBy$: Observable<string | null> = this.sortBySubject.asObservable().pipe(
-    distinctUntilChanged() //chỉ phát khi giá trị thực sự thay đổi
-  );
+  sortBy$: Observable<string | null> = this.sortBySubject.asObservable().pipe(distinctUntilChanged());
   limit$: Observable<number | null> = this.limitSubject.asObservable().pipe(distinctUntilChanged());
+  messages$: Observable<ApiResponse> = this.messagesSubject.asObservable();
 
-  messages$: Observable<ApiResponse> = combineLatest([
-    this.currentPage$,
-    this.currentSize$,
-    this.filterQuery$,
-    this.sortBy$,
-    this.limit$
-  ] as const).pipe(
-    debounceTime(100),
-    distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)),  // So sánh payload
-    switchMap(([page, perPage, filterQuery, sortBy, limit]) => {
-      const payload: MessagePayload = {
-        page,
-        perPage,
-        filterQuery,
-        sort_by: sortBy,
-        limit
-      };
-      console.log('Fetching with payload:', payload);
-      return this.fetchMessages(payload);
-    }),
-    map(response => {
+  constructor(private http: HttpClient) {
+    this.fetchDataOnParamsChange();
+  }
+
+  private fetchDataOnParamsChange() {
+    combineLatest([
+      this.currentPage$,
+      this.currentSize$,
+      this.filterQuery$,
+      this.sortBy$,
+      this.limit$
+    ] as const).pipe(
+      debounceTime(100),
+      distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)),
+      switchMap(([page, perPage, filterQuery, sortBy, limit]) => {
+        return this.fetchMessages({ page, perPage, filterQuery, sort_by: sortBy, limit });
+      }),
+      catchError(error => {
+        return of({ status: 'error', data: [], total: 0 } as ApiResponse);
+      })
+    ).subscribe(response => {
+      console.log('API response from params change:', response);
       if (response.status === 'success' && typeof response.total === 'number') {
         this.totalCountSubject.next(response.total);
+        this.messagesSubject.next(response);
       } else {
         this.totalCountSubject.next(0);
+        this.messagesSubject.next({ status: 'success', data: [], total: 0 });
       }
-      return response;
-    }),
-    catchError(error => {
-      return of({ status: 'error', data: [], total: 0 } as ApiResponse);
-    }),
-    shareReplay(1)
-  );
-
-  constructor(private http: HttpClient) {}
+    });
+  }
 
   private fetchMessages(payload: MessagePayload): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(this.apiUrl, payload);
   }
 
+  private forceRefresh() {
+    const payload: MessagePayload = {
+      page: this.pageSubject.value,
+      perPage: this.sizeSubject.value,
+      filterQuery: this.filterQuerySubject.value,
+      sort_by: this.sortBySubject.value,
+      limit: this.limitSubject.value
+    };
+    this.fetchMessages(payload).subscribe(response => {
+      console.log('Force refresh response:', response);
+      if (response.status === 'success' && typeof response.total === 'number') {
+        this.totalCountSubject.next(response.total);
+        this.messagesSubject.next(response);
+      } else {
+        this.totalCountSubject.next(0);
+        this.messagesSubject.next({ status: 'success', data: [], total: 0 });
+      }
+    });
+  }
+
   updatePage(newPage: number) {
-    if (newPage >= 0 && newPage !== this.pageSubject.value) {
+    if (newPage >= 0) {
       this.pageSubject.next(newPage);
     }
   }
@@ -96,6 +111,29 @@ export class PaginationService {
   updateLimit(limit: number | null) {
     if (limit !== this.limitSubject.value) {
       this.limitSubject.next(limit);
+    }
+  }
+
+  removeMessage(messageId: string) {
+    const currentMessages = this.messagesSubject.value;
+    if (currentMessages.status === 'success' && Array.isArray(currentMessages.data)) {
+      const updatedData = currentMessages.data.filter((msg: any) => msg._id !== messageId);
+      if (updatedData.length !== currentMessages.data.length) {
+        const newTotal = typeof currentMessages.total === 'number' ? currentMessages.total - 1 : 0;
+
+        if (updatedData.length === 0) {
+          this.forceRefresh();
+        } else {
+          const updatedMessages = {
+            ...currentMessages,
+            data: updatedData,
+            total: newTotal
+          };
+          this.messagesSubject.next(updatedMessages);
+        }
+      } else {
+        console.log(`No message found with _id: ${messageId}`);
+      }
     }
   }
 }
