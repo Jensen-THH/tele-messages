@@ -40,3 +40,39 @@ body {
   80% { transform: translate(1px, -1px); }
   100% { transform: translate(0); }
 }
+
+.neon-modal {
+  background: rgba(20, 20, 40, 0.95);
+  border: 2px solid #ff00ff;
+  box-shadow: 0 0 20px #ff00ff, 0 0 40px #00ffcc;
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+
+  /* Tùy chỉnh scrollbar với shadow */
+  &::-webkit-scrollbar {
+    width: 4px; /* Độ rộng ban đầu */
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #1a1a33; /* Nền tối */
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #ff00ff; /* Màu neon hồng */
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #00ffcc; /* Chuyển xanh khi hover */
+  }
+
+  /* Hỗ trợ Firefox */
+  // scrollbar-width: thin;
+  // scrollbar-color: #ff00ff #1a1a33;
+}

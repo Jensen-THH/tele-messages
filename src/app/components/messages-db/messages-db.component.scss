@@ -20,6 +20,9 @@ html, body {
   overflow-y: auto;
   overflow-x: auto;
   max-height: calc(100vh - 80px); /* Trừ chiều cao footer */
+  scrollbar-width: thin;
+  scrollbar-color: #00ffcc #0d0d1a;
+  padding-bottom: 1rem ;
 }
 
 .cyberpunk-table {
@@ -27,6 +30,11 @@ html, body {
   border-collapse: collapse;
   background: rgba(20, 20, 40, 0.9);
   box-shadow: 0 0 15px #00ffcc;
+
+  // thêm hiệu ứng thanh scroll  dọc mỏng
+  scrollbar-width: thin;
+  scrollbar-color: #00ffcc #0d0d1a;
+
 }
 
 /* Cố định tiêu đề bảng */

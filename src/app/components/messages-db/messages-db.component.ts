@@ -5,6 +5,8 @@ import { FilterQuery, MessageDetail, ViewModel } from '../../shared/interfaces/i
 import { PaginationService } from '../../services/pagination.service';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { BaseComponent } from '../../shared/components/base/base.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-messages-db',
@@ -13,12 +15,14 @@ import { map } from 'rxjs/operators';
   templateUrl: './messages-db.component.html',
   styleUrls: ['./messages-db.component.scss']
 })
-export class MessagesDbComponent implements OnInit {
+export class MessagesDbComponent extends BaseComponent implements OnInit {
   vm$!: Observable<ViewModel>;
   filterQuery: FilterQuery = {};
   sortBy: string = '';
 
-  constructor(public paginationService: PaginationService) { }
+  constructor(public paginationService: PaginationService) {
+    super();
+  }
 
   ngOnInit() {
     this.vm$ = combineLatest([
@@ -28,6 +32,7 @@ export class MessagesDbComponent implements OnInit {
       this.paginationService.filterQuery$,
       this.paginationService.sortBy$
     ] as const).pipe(
+      takeUntilDestroyed(this.destroyRef),
       map(([currentPage, currentSize, totalCount, filterQuery, sortBy]) => ({
         currentPage,
         currentSize,
