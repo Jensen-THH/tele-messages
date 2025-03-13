@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MessageListComponent } from './components/message-list/message-list.component';
-import { LoadingComponent } from './components/loading/loading.component';
+import { LoadingComponent } from './shared/components/loading/loading.component';
 import { Observable } from 'rxjs';
 import { LoadingService } from './services/loading.service';
 import { CommonModule } from '@angular/common';
