@@ -11,7 +11,7 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
   getMessages(params: any): Observable<any> {
-    return this.http.get(`${this.apiUrl}get_messages`, { params });
+    return this.http.get(`${this.apiUrl}get_messages/`, { params });
   }
 
   deleteMessage(messageId: string): Observable<any> {
@@ -19,6 +19,6 @@ export class ApiService {
   }
 
   deleteMessages(messageIds: string[]): Observable<any> {
-    return this.http.post(`${this.apiUrl}delete_messages_by_ids`, { message_ids: messageIds });
+    return this.http.post(`${this.apiUrl}delete_messages_by_ids/`, { message_ids: messageIds });
   }
 }

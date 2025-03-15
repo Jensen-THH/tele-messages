@@ -62,7 +62,7 @@
    
     <!-- Hiển thị kết quả -->
     <div class="row cards-container">
-        <div class="col-md-4 mb-3" *ngFor="let message of messages">
+        <div class="col-md-4 mb-3" *ngFor="let message of messages$ | async">
             <div class="neon-card" (click)="showDetails(message)">
                 <p><strong class="neon-text">ID:</strong> {{ message.message_id }}</p>
                 <p><strong class="neon-text">User:</strong> <span [title]="message.user_name || 'Unknown'">{{

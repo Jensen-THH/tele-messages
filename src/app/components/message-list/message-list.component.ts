@@ -1,13 +1,12 @@
-import { Component, HostListener } from '@angular/core';
+import { MessagesState } from './../../shared/store/messages.reducer';
+import { Component, HostListener, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ApiService } from '../../services/api.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { Observable } from 'rxjs';
 import { BaseComponent } from '../../shared/components/base/base.component';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MessageDetail, SearchParams } from '../../shared/interfaces/interfaces';
-
+import { Store } from '@ngrx/store';
+import * as Messages from '../../shared/store/actions'
 @Component({
   selector: 'app-message-list',
   standalone: true,
@@ -23,6 +22,10 @@ import { MessageDetail, SearchParams } from '../../shared/interfaces/interfaces'
 })
 export class MessageListComponent extends BaseComponent {
   messages: MessageDetail[] = [];
+  private store = inject(Store<{ messages: MessagesState }>);
+  messages$ = this.store.select(state => state.messages.data)
+  // loading$: Observable<boolean>; 
+  // error$: Observable<string | null>;
   searchParams: SearchParams = {
     chat_id: 'nghienplusofficial',
     offset_date: '',
@@ -37,13 +40,12 @@ export class MessageListComponent extends BaseComponent {
   selectedMessage: any = null;
 
 
-  constructor(
-    private apiService: ApiService,
-  ) {
+  constructor() {
     super();
+    this.searchMessages();
   }
 
-  searchMessages(): void {
+  getParam = () => {
     const params: any = {
       chat_id: this.searchParams.chat_id,
       limit: this.searchParams.limit.toString(),
@@ -55,17 +57,21 @@ export class MessageListComponent extends BaseComponent {
     if (this.searchParams.keyword) params.keyword = this.searchParams.keyword;
     if (this.searchParams.topic_id) params.topic_id = this.searchParams.topic_id.toString();
     if (this.searchParams.from_user) params.from_user = this.searchParams.from_user;
+    return params
+  }
 
-    this.apiService.getMessages(params).pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
-      next: (response) => {
-        this.messages = response.data || [];
-      },
-      error: (error) => {
-        console.error('Error fetching messages:', error);
-      }
-    });
+  searchMessages(): void {
+    // this.apiService.getMessages(this.getParam()).pipe(
+    //   takeUntilDestroyed(this.destroyRef)
+    // ).subscribe({
+    //   next: (response) => {
+    //     this.messages = response.data || [];
+    //   },
+    //   error: (error) => {
+    //     console.error('Error fetching messages:', error);
+    //   }
+    // });
+    this.store.dispatch(Messages.loadMessages(this.getParam()))
   }
 
   showDetails(message: any): void {
