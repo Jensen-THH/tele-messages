@@ -1,0 +1,21 @@
+<div class="center">
+    <div [class]="notification.type" *ngFor="let notification of notifications()"
+        (click)="onClickRemove(notification.id)">
+        @switch (notification.type) {
+        @case ('success') {
+        <i class="far fa-check-circle color"></i>
+        }
+        @case ('info') {
+        <i class="fa fa-info-circle spin"></i>
+        }
+        @case ('danger') {
+        <i class="far fa-times-circle shine"></i>
+        }
+        @case ('warning') {
+        <i class="fa fa-exclamation-triangle rotate"></i>
+        }
+        }
+        &nbsp; &nbsp;
+        <span>{{notification.messages}}</span>
+    </div>
+</div>

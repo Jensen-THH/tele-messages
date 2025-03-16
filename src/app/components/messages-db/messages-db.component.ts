@@ -9,6 +9,7 @@ import { BaseComponent } from '../../shared/components/base/base.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ApiService } from '../../services/api.service';
 import { DialogService } from '../../services/dialog.service';
+import { NotificationService } from '../../services/notification.service';
 @Component({
   selector: 'app-messages-db',
   standalone: true,
@@ -22,6 +23,7 @@ export class MessagesDbComponent extends BaseComponent implements OnInit {
   dialogConfirm = inject(DialogService);
   filterQuery: FilterQuery = {};
   sortBy: string = '';
+  notificationService = inject(NotificationService);
 
   constructor(public paginationService: PaginationService) {
     super();
@@ -93,9 +95,12 @@ export class MessagesDbComponent extends BaseComponent implements OnInit {
           next: (res) => {
             if (res.status === 'success') {
               this.paginationService.removeMessage(messageId);
+              this.notificationService.addNotificaton('success','Delete success', 3000)
             }
           },
-          error: (err) => console.error('Delete failed:', err)
+          error: (err) => {
+            this.notificationService.addNotificaton('info','Delete failed', 3000)
+          }
         });
       }
     });

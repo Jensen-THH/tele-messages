@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { map, switchMap, distinctUntilChanged, catchError, shareReplay, debounceTime } from 'rxjs/operators';
 import { ApiResponse, FilterQuery, MessagePayload } from '../shared/interfaces/interfaces';
 import { of } from 'rxjs';
+import { NotificationService } from './notification.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -28,7 +29,7 @@ export class PaginationService {
   sortBy$: Observable<string | null> = this.sortBySubject.asObservable().pipe(distinctUntilChanged());
   limit$: Observable<number | null> = this.limitSubject.asObservable().pipe(distinctUntilChanged());
   messages$: Observable<ApiResponse> = this.messagesSubject.asObservable();
-
+  notificationService = inject(NotificationService);
   constructor(private http: HttpClient) {
     this.fetchDataOnParamsChange();
   }
@@ -50,7 +51,6 @@ export class PaginationService {
         return of({ status: 'error', data: [], total: 0 } as ApiResponse);
       })
     ).subscribe(response => {
-      console.log('API response from params change:', response);
       if (response.status === 'success' && typeof response.total === 'number') {
         this.totalCountSubject.next(response.total);
         this.messagesSubject.next(response);
@@ -74,7 +74,6 @@ export class PaginationService {
       limit: this.limitSubject.value
     };
     this.fetchMessages(payload).subscribe(response => {
-      console.log('Force refresh response:', response);
       if (response.status === 'success' && typeof response.total === 'number') {
         this.totalCountSubject.next(response.total);
         this.messagesSubject.next(response);
@@ -132,7 +131,7 @@ export class PaginationService {
           this.messagesSubject.next(updatedMessages);
         }
       } else {
-        console.log(`No message found with _id: ${messageId}`);
+        this.notificationService.addNotificaton('warning',`No message found with _id: ${messageId}`, 3000)
       }
     }
   }

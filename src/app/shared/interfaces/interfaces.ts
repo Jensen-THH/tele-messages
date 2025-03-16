@@ -112,3 +112,10 @@ export interface ConfirmDialogData {
   confirmText?: string;
   cancelText?: string;
 }
+
+export interface Notification {
+  id: number;
+  messages: string | '';
+  type: 'error' | 'warning' | 'success' | 'info' | 'danger'
+  duration?: number;
+}
