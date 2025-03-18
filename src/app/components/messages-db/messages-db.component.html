@@ -5,7 +5,7 @@
   <ng-container *ngIf="vm$ | async as vm">
     <ng-container *ngIf="paginationService.messages$ | async as response">
       <div class="table-wrapper">
-        <table class="cyberpunk-table" *ngIf="response.status === 'success' && response.data?.length; else error">
+        <table class="cyberpunk-table" *ngIf="response.status === 'success' && response.data?.length; else noData">
           <thead>
             <tr>
               <th>No.</th>
@@ -18,28 +18,33 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let msg of response.data; index as i">
+            <tr *ngFor="let msg of response.data; index as i; trackBy: trackById">
               <td>{{ i + 1 }}</td>
               <td class="truncate" title="{{ msg.text }}">{{ msg.text }}</td>
               <td>{{ msg.date | date:'medium' }}</td>
               <td>{{ msg.user_name || 'Unknown' }}</td>
               <td>{{ msg.total_reactions || 0 }}</td>
-              <td><a href="{{ msg.message_link }}" target="_blank" class="cyberpunk-link">View</a></td>
+              <td><a href="{{ msg.message_link }}" target="_blank" class="cyberpunk-link" aria-label="View message">View</a></td>
               <td>
-                <button class="cyberpunk-btn cyberpunk-btn-delete" (click)="onDelete(msg._id)">Delete</button>
+                <button class="cyberpunk-btn cyberpunk-btn-delete" (click)="onDelete(msg._id)" aria-label="Delete message">Delete</button>
               </td>
             </tr>
           </tbody>
         </table>
-        <ng-template #error>
-          <p class="cyberpunk-error">{{ response.message || 'No data available' }}</p>
+        <ng-template #noData>
+          <p class="cyberpunk-error" *ngIf="response.status === 'error'; else empty">
+            Error: {{ response.message || 'Failed to load data' }}
+          </p>
+          <ng-template #empty>
+            <p class="cyberpunk-error">No data available</p>
+          </ng-template>
         </ng-template>
       </div>
       <div class="cyberpunk-footer">
         <div class="cyberpunk-filters">
           <input type="text" [(ngModel)]="filterQuery.text" placeholder="Filter by message"
-            (ngModelChange)="updateFilters()" class="cyberpunk-input" />
-          <select [(ngModel)]="sortBy" (ngModelChange)="updateFilters()" class="cyberpunk-select">
+            (ngModelChange)="updateFilters()" class="cyberpunk-input" aria-label="Filter messages" />
+          <select [(ngModel)]="sortBy" (ngModelChange)="updateFilters()" class="cyberpunk-select" aria-label="Sort messages">
             <option value="">No Sort</option>
             <option value="date">Date (Asc)</option>
             <option value="-date">Date (Desc)</option>
@@ -54,15 +59,15 @@
         </div>
         <div class="cyberpunk-controls">
           <button class="cyberpunk-btn" (click)="onPageChanged(vm.currentPage - 1)"
-            [disabled]="vm.currentPage === 0">Previous</button>
-            <select class="cyberpunk-select" (change)="onPageSelected($event)" [value]="vm.currentPage">
-              <option *ngFor="let page of getPageNumbers(vm.totalCount, vm.currentSize)" [value]="page - 1">
-                Page {{ page }}
-              </option>
-            </select>
+            [disabled]="vm.currentPage === 0" aria-label="Previous page">Previous</button>
+          <select class="cyberpunk-select" (change)="onPageSelected($event)" [value]="vm.currentPage" aria-label="Select page">
+            <option *ngFor="let page of getPageNumbers(vm.totalCount, vm.currentSize)" [value]="page - 1">
+              Page {{ page }}
+            </option>
+          </select>
           <button class="cyberpunk-btn" (click)="onPageChanged(vm.currentPage + 1)"
-            [disabled]="vm.totalCount <= (vm.currentPage + 1) * vm.currentSize">Next</button>
-          <select class="cyberpunk-select" (change)="onSizeChanged($event)" [value]="vm.currentSize || 10">
+            [disabled]="vm.totalCount <= (vm.currentPage + 1) * vm.currentSize" aria-label="Next page">Next</button>
+          <select class="cyberpunk-select" (change)="onSizeChanged($event)" [value]="vm.currentSize || 10" aria-label="Select page size">
             <option *ngFor="let size of [5, 10, 20, 50, 100, 200, 500, 1000, 10000]" [value]="size">{{ size }}</option>
           </select>
         </div>
