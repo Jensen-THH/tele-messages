@@ -4,40 +4,35 @@
     </div>
     <div class="container">
         <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>No.</th>
-                    <th>Text</th>
-                    <th>Date</th>
-                    <th>User</th>
-                    <th>Reactions</th>
-                    <th>Link</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Sample Text</td>
-                    <td>2025-03-18</td>
-                    <td>John Doe</td>
-                    <td>👍 10</td>
-                    <td><a href="#">View</a></td>
-                    <td><button class="action-btn">Edit</button></td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Another Text</td>
-                    <td>2025-03-18</td>
-                    <td>Jane Smith</td>
-                    <td>❤️ 15</td>
-                    <td><a href="#">View</a></td>
-                    <td><button class="action-btn">Edit</button></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Text</th>
+                        <th>Date</th>
+                        <th>Reactions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngIf="messages$ | async as messages">
+                        <ng-container *ngIf="messages.length > 0; then thenTemplate; else elseTemplate"></ng-container>
+                        <ng-template #thenTemplate>
+                          <tr *ngFor="let msg of messages">
+                            <td class="truncate" title="{{ msg.text }}">{{ msg.text }}</td>
+                            <td>{{ msg.date | date: 'medium' }}</td>
+                            <td>{{ msg.user_name || 'Unknown' }}</td>
+                            <td>{{ msg.total_reactions || 0 }}</td>
+                          </tr>
+                        </ng-template>
+                        <ng-template #elseTemplate>
+                          <tr>
+                            <td>No data available</td>
+                          </tr>
+                        </ng-template>
+                      </ng-container>
+                </tbody>
+            </table>
+        </div>
         <div class="container-pagination large">
             <div class="pagination">
                 <ul>

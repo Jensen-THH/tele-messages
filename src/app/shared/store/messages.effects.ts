@@ -1,34 +1,31 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { catchError, map, mergeMap, of } from 'rxjs';
 import * as Messages from './actions';
-import { catchError, map, mergeMap, Observer, of, skipWhile } from 'rxjs';
 import { ApiService } from '../../services/api.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { BaseComponent } from '../components/base/base.component';
 import { NotificationService } from '../../services/notification.service';
 
-@Injectable({
-    providedIn: 'root'
-})
-export class MessagesTeleEffects extends BaseComponent {
+@Injectable()
+export class MessagesTeleEffects {
     private apiService = inject(ApiService);
     private actions$ = inject(Actions);
     private notificationService = inject(NotificationService);
-    constructor() { super(); }
-    loadMessages$ = createEffect(() => {
-        return this.actions$.pipe(ofType(Messages.loadMessages),
-        mergeMap((params) => {
-                return this.apiService.getMessages(params).pipe(
-                    takeUntilDestroyed(this.destroyRef),
-                    map(res => {
-                        this.notificationService.addNotificaton('success','get data successfully', 3000)
-                       return Messages.loadMessagesSuccess(res)
+
+    loadMessages$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(Messages.loadMessages),
+            mergeMap((action) => {
+                console.log('Dispatching with params:', action);
+                return this.apiService.getMessages(action).pipe(
+                    map((response) => {
+                        this.notificationService.addNotificaton('success', 'Get data successfully', 3000);
+                        return Messages.loadMessagesSuccess({ messages: response.data });
                     }),
-                    catchError((error) => of(Messages.loadMessagesFailure({ error: error.message })))
-                )
-            }
-            )
+                    catchError((error) => {
+                        return of(Messages.loadMessagesFailure({ error: error.message }));
+                    })
+                );
+            })
         )
-    }
-    )
+    );
 }

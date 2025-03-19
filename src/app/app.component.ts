@@ -4,7 +4,7 @@ import { LoadingComponent } from './shared/components/loading/loading.component'
 import { Observable } from 'rxjs';
 import { LoadingService } from './services/loading.service';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',

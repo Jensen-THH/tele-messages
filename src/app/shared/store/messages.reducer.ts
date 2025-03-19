@@ -4,7 +4,7 @@ import * as Messages from './actions';
 
 export interface MessagesState {
     data: MessageDetail[],
-    error: any,
+    error: string | null;
     loading: boolean
 };
 
@@ -16,16 +16,13 @@ const initialState: MessagesState = {
 
 export const messagesReducer = createReducer(
     initialState,
-    on(
-        Messages.loadMessages,
-        (state) => ({ ...state, loading: true, error: null }),
-    ),
-    on(
-        Messages.loadMessagesSuccess,
-        (state, { data }) => ({ ...state, data: data, loading: false, error: null })
-    ),
-    on(
-        Messages.loadMessagesFailure,
-        (state, { error }) => ({ ...state, data: [], loading: false, error: error })
-    )
+    on(Messages.loadMessages, (state) => {
+        return { ...state, loading: true, error: null };
+    }),
+    on(Messages.loadMessagesSuccess, (state, { messages }) => {
+        return { ...state, data: messages, loading: false, error: null };
+    }),
+    on(Messages.loadMessagesFailure, (state, { error }) => {
+        return { ...state, data: [], loading: false, error };
+    })
 );

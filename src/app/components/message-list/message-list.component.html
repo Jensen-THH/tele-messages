@@ -1,118 +1,134 @@
-<div class="container mt-5">
-    <h1 class="neon-text glitch text-center mb-4">Cyberpunk Message Search</h1>
-
-    <!-- Form tìm kiếm -->
-    <div class="neon-card mb-4">
-        <form (ngSubmit)="searchMessages()">
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label class="neon-text">Chat ID</label>
-                    <input type="text" class="form-control neon-input" [(ngModel)]="searchParams.chat_id" name="chat_id"
-                        required>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label class="neon-text">From User</label>
-                    <input type="text" class="form-control neon-input" [(ngModel)]="searchParams.from_user"
-                        name="from_user" placeholder="@username">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label class="neon-text">Offset Date</label>
-                    <input type="datetime-local" class="form-control neon-input" [(ngModel)]="searchParams.offset_date"
-                        name="offset_date">
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label class="neon-text">End Date</label>
-                    <input type="datetime-local" class="form-control neon-input" [(ngModel)]="searchParams.end_date"
-                        name="end_date">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label class="neon-text">Keyword</label>
-                    <input type="text" class="form-control neon-input" [(ngModel)]="searchParams.keyword"
-                        name="keyword">
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label class="neon-text">Limit</label>
-                    <input type="number" class="form-control neon-input" [(ngModel)]="searchParams.limit" name="limit"
-                        min="1" max="100">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label class="neon-text">Topic ID</label>
-                    <input type="number" class="form-control neon-input" [(ngModel)]="searchParams.topic_id"
-                        name="topic_id">
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label class="neon-text">Fetch Username</label>
-                    <input type="checkbox" [(ngModel)]="searchParams.fetch_username" name="fetch_username"
-                        class="form-check-input">
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label class="neon-text">Include Media</label>
-                    <input type="checkbox" [(ngModel)]="searchParams.img_flag" name="img_flag" class="form-check-input">
-                </div>
-            </div>
-            <button type="submit" class="btn neon-btn w-100">Search</button>
-        </form>
+<div class="tab-container">
+    <div class="tab-buttons">
+        <button [class.active]="activeTab === 'messages'" (click)="switchTab('messages')">
+            Messages
+        </button>
+        <button [class.active]="activeTab === 'messages-table'" (click)="switchTab('messages-table')">
+            Messages Table
+        </button>
     </div>
-   
-    <!-- Hiển thị kết quả -->
-    <div class="row cards-container">
-        <div class="col-md-4 mb-3" *ngFor="let message of messages$ | async">
-            <div class="neon-card" (click)="showDetails(message)">
-                <p><strong class="neon-text">ID:</strong> {{ message.message_id }}</p>
-                <p><strong class="neon-text">User:</strong> <span [title]="message.user_name || 'Unknown'">{{
-                        message.user_name }}</span></p>
-                <p><strong class="neon-text">Text:</strong> <span [title]="message.text" class="limit-lines">{{
-                        message.text }}</span></p>
-                <p><strong class="neon-text">Date (VN):</strong> {{ message.date_vn | date: 'dd/MM/yyyy HH:mm:ss' }}</p>
-                <p *ngIf="message.views"><strong class="neon-text">View:</strong> {{ message.views }}</p>
-                <p *ngIf="message.reactions"><strong class="neon-text">Reactions:</strong> {{ message.reactions | json
-                    }}</p>
-                <p *ngIf="message.total_reactions"><strong class="neon-text">Total React:</strong> {{
-                    message.total_reactions }}</p>
-                <p *ngIf="message.media_base64"><strong class="neon-text">Media:</strong> <img
-                        [src]="'data:image/jpeg;base64,' + message.media_base64" class="img-fluid" alt="Media"></p>
-                <p><strong class="neon-text">Link:</strong> <a [href]="message.message_link" target="_blank"
-                        class="neon-text limit-text">{{ message.message_link }}</a></p>
+
+    <div class="tab-content">
+        <div *ngIf="activeTab === 'messages'" class="tab-pane">
+            <div class="container mt-5">
+                <h1 class="neon-text glitch text-center mb-4">Cyberpunk Message Search</h1>
+                <!-- Form tìm kiếm -->
+                <div class="neon-card mb-4">
+                    <form (ngSubmit)="searchMessages()">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="neon-text">Chat ID</label>
+                                <input type="text" class="form-control neon-input" [(ngModel)]="searchParams.chat_id" name="chat_id"
+                                    required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="neon-text">From User</label>
+                                <input type="text" class="form-control neon-input" [(ngModel)]="searchParams.from_user"
+                                    name="from_user" placeholder="@username">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="neon-text">Offset Date</label>
+                                <input type="datetime-local" class="form-control neon-input" [(ngModel)]="searchParams.offset_date"
+                                    name="offset_date">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="neon-text">End Date</label>
+                                <input type="datetime-local" class="form-control neon-input" [(ngModel)]="searchParams.end_date"
+                                    name="end_date">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="neon-text">Keyword</label>
+                                <input type="text" class="form-control neon-input" [(ngModel)]="searchParams.keyword"
+                                    name="keyword">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="neon-text">Limit</label>
+                                <input type="number" class="form-control neon-input" [(ngModel)]="searchParams.limit" name="limit"
+                                    min="1" max="100">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="neon-text">Topic ID</label>
+                                <input type="number" class="form-control neon-input" [(ngModel)]="searchParams.topic_id"
+                                    name="topic_id">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="neon-text">Fetch Username</label>
+                                <input type="checkbox" [(ngModel)]="searchParams.fetch_username" name="fetch_username"
+                                    class="form-check-input">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="neon-text">Include Media</label>
+                                <input type="checkbox" [(ngModel)]="searchParams.img_flag" name="img_flag" class="form-check-input">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn neon-btn w-100">Search</button>
+                    </form>
+                </div>
+               
+                <!-- Hiển thị kết quả -->
+                <div class="row cards-container">
+                    <div class="col-md-4 mb-3" *ngFor="let message of messages$ | async">
+                        <div class="neon-card" (click)="showDetails(message)">
+                            <p><strong class="neon-text">ID:</strong> {{ message.message_id }}</p>
+                            <p><strong class="neon-text">User:</strong> <span [title]="message.user_name || 'Unknown'">{{
+                                    message.user_name }}</span></p>
+                            <p><strong class="neon-text">Text:</strong> <span [title]="message.text" class="limit-lines">{{
+                                    message.text }}</span></p>
+                            <p><strong class="neon-text">Date (VN):</strong> {{ message.date_vn | date: 'dd/MM/yyyy HH:mm:ss' }}</p>
+                            <p *ngIf="message.views"><strong class="neon-text">View:</strong> {{ message.views }}</p>
+                            <p *ngIf="message.reactions"><strong class="neon-text">Reactions:</strong> {{ message.reactions | json
+                                }}</p>
+                            <p *ngIf="message.total_reactions"><strong class="neon-text">Total React:</strong> {{
+                                message.total_reactions }}</p>
+                            <p *ngIf="message.media_base64"><strong class="neon-text">Media:</strong> <img
+                                    [src]="'data:image/jpeg;base64,' + message.media_base64" class="img-fluid" alt="Media"></p>
+                            <p><strong class="neon-text">Link:</strong> <a [href]="message.message_link" target="_blank"
+                                    class="neon-text limit-text">{{ message.message_link }}</a></p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Popup chi tiết -->
+                <div class="modal-overlay" *ngIf="selectedMessage" [@fadeInOut] (click)="closePopup()">
+                    <div class="neon-modal" (click)="$event.stopPropagation()">
+                        <h2 class="neon-text glitch text-center">Message Details</h2>
+                        <div class="modal-content">
+                            <p><strong class="neon-text">Message ID:</strong> {{ selectedMessage.message_id }}</p>
+                            <p><strong class="neon-text">Chat ID:</strong> {{ selectedMessage.chat_id }}</p>
+                            <p><strong class="neon-text">Date:</strong> {{ selectedMessage.date }}</p>
+                            <p><strong class="neon-text">Date (VN):</strong> {{ selectedMessage.date_vn }}</p>
+                            <p><strong class="neon-text">Text:</strong> {{ selectedMessage.text }}</p>
+                            <p><strong class="neon-text">Views:</strong> {{ selectedMessage.views ? selectedMessage.views : 'N/A' }}
+                            </p>
+                            <p><strong class="neon-text">Reactions:</strong> {{ selectedMessage.reactions ?
+                                (selectedMessage.reactions | json) : 'N/A' }}</p>
+                            <p><strong class="neon-text">Total Reactions:</strong> {{ selectedMessage.total_reactions ?
+                                selectedMessage.total_reactions : 'N/A' }}</p>
+                            <p><strong class="neon-text">Message Link:</strong> <a [href]="selectedMessage.message_link"
+                                    target="_blank" class="neon-text">{{ selectedMessage.message_link }}</a></p>
+                            <p *ngIf="selectedMessage.media_base64"><strong class="neon-text">Media:</strong> <img
+                                    [src]="'data:image/jpeg;base64,' + selectedMessage.media_base64" class="img-fluid" alt="Media">
+                            </p>
+                            <p><strong class="neon-text">User Name:</strong> {{ selectedMessage.user_name || 'N/A' }}</p>
+                            <p><strong class="neon-text">User ID:</strong> {{ selectedMessage.user_id || 'N/A' }}</p>
+                            <p><strong class="neon-text">Reply To Message ID:</strong> {{ selectedMessage.reply_to_msg_id || 'N/A'
+                                }}</p>
+                            <p><strong class="neon-text">Reply To Top ID:</strong> {{ selectedMessage.reply_to_top_id || 'N/A' }}
+                            </p>
+                            <p><strong class="neon-text">Forum Topic:</strong> {{ selectedMessage.forum_topic || 'N/A' }}</p>
+                        </div>
+                        <button class="btn neon-btn w-100 mt-3" (click)="closePopup()">Close</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-
-    <!-- Popup chi tiết -->
-    <div class="modal-overlay" *ngIf="selectedMessage" [@fadeInOut] (click)="closePopup()">
-        <div class="neon-modal" (click)="$event.stopPropagation()">
-            <h2 class="neon-text glitch text-center">Message Details</h2>
-            <div class="modal-content">
-                <p><strong class="neon-text">Message ID:</strong> {{ selectedMessage.message_id }}</p>
-                <p><strong class="neon-text">Chat ID:</strong> {{ selectedMessage.chat_id }}</p>
-                <p><strong class="neon-text">Date:</strong> {{ selectedMessage.date }}</p>
-                <p><strong class="neon-text">Date (VN):</strong> {{ selectedMessage.date_vn }}</p>
-                <p><strong class="neon-text">Text:</strong> {{ selectedMessage.text }}</p>
-                <p><strong class="neon-text">Views:</strong> {{ selectedMessage.views ? selectedMessage.views : 'N/A' }}
-                </p>
-                <p><strong class="neon-text">Reactions:</strong> {{ selectedMessage.reactions ?
-                    (selectedMessage.reactions | json) : 'N/A' }}</p>
-                <p><strong class="neon-text">Total Reactions:</strong> {{ selectedMessage.total_reactions ?
-                    selectedMessage.total_reactions : 'N/A' }}</p>
-                <p><strong class="neon-text">Message Link:</strong> <a [href]="selectedMessage.message_link"
-                        target="_blank" class="neon-text">{{ selectedMessage.message_link }}</a></p>
-                <p *ngIf="selectedMessage.media_base64"><strong class="neon-text">Media:</strong> <img
-                        [src]="'data:image/jpeg;base64,' + selectedMessage.media_base64" class="img-fluid" alt="Media">
-                </p>
-                <p><strong class="neon-text">User Name:</strong> {{ selectedMessage.user_name || 'N/A' }}</p>
-                <p><strong class="neon-text">User ID:</strong> {{ selectedMessage.user_id || 'N/A' }}</p>
-                <p><strong class="neon-text">Reply To Message ID:</strong> {{ selectedMessage.reply_to_msg_id || 'N/A'
-                    }}</p>
-                <p><strong class="neon-text">Reply To Top ID:</strong> {{ selectedMessage.reply_to_top_id || 'N/A' }}
-                </p>
-                <p><strong class="neon-text">Forum Topic:</strong> {{ selectedMessage.forum_topic || 'N/A' }}</p>
-            </div>
-            <button class="btn neon-btn w-100 mt-3" (click)="closePopup()">Close</button>
+        <div *ngIf="activeTab === 'messages-table'" class="tab-pane">
+            <app-simple-messages-list></app-simple-messages-list>
         </div>
     </div>
 </div>
