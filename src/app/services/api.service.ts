@@ -21,4 +21,20 @@ export class ApiService {
   deleteMessages(messageIds: string[]): Observable<any> {
     return this.http.post(`${this.apiUrl}delete_messages_by_ids/`, { message_ids: messageIds });
   }
+
+  sendMessage(recipient: string, text: string, files: File[]): Observable<any> {
+    const formData = new FormData();
+    formData.append('recipient', recipient);
+    formData.append('text', text);
+    if (files) {
+      for (const file of files) {
+        formData.append('files', file);
+      }
+    }
+    return this.http.post(`${this.apiUrl}send_message/`, formData);
+  }
+
+  getChannels(): Observable<any> {
+    return this.http.get(`${this.apiUrl}get_channels`);
+  }
 }

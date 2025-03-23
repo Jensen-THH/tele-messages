@@ -17,6 +17,20 @@ const routeConfig: Routes = [
         ),
   },
   {
+    path: 'send_messages',
+    loadComponent: () =>
+        import('./components/send-message/send-message.component').then(
+          (m) => m.SendMessageComponent
+        ),
+  },
+  {
+    path: 'channels',
+    loadComponent: () =>
+        import('./components/channels/channels.component').then(
+          (m) => m.ChannelsComponent
+        ),
+  },
+  {
     path: 'messages-db',
     loadComponent: () =>
       import('./components/messages-db/messages-db.component').then(

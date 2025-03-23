@@ -127,8 +127,21 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="activeTab === 'messages-table'" class="tab-pane">
-            <app-simple-messages-list></app-simple-messages-list>
+        <div *ngIf="activeTab === 'messages-table'" class="tab-pane" >
+            <button #triggerElement> Hover for show</button>
+            <button (click)="isDisplay = !isDisplay">{{isDisplay ? 'Hide table' : 'Show table'}}</button>
+                @defer (on hover(triggerElement)) {
+                    <p>Hello</p>
+                }
+                @loading {
+                    <p>Loading...</p>
+                } @error {
+                    <p>Error occurred</p>
+                }
+                @if (isDisplay) {
+                    <app-simple-messages-list></app-simple-messages-list>
+                }
+               
         </div>
     </div>
 </div>

@@ -41,6 +41,7 @@ export class MessageListComponent extends BaseComponent {
   selectedMessage: any = null;
 
   activeTab: string = 'messages';
+  isDisplay: boolean = false;
 
   switchTab(tab: string) {
     this.activeTab = tab;
