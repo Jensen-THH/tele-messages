@@ -2,9 +2,11 @@ import { HttpErrorResponse, HttpInterceptorFn, HttpResponse } from '@angular/com
 import { inject } from '@angular/core';
 import { LoadingService } from '../services/loading.service';
 import { catchError, finalize, tap, throwError } from 'rxjs';
+import { NotificationService } from '../services/notification.service';
 
 export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
   const loadingService = inject(LoadingService);
+  const notifitionService = inject(NotificationService)
   loadingService.show();
   return next(req).pipe(
     tap(event => {

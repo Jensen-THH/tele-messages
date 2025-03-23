@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FilterQuery, MessageDetail, ViewModel } from '../../shared/interfaces/interfaces';
+import { FilterQuery, ViewModel } from '../../shared/interfaces/interfaces';
 import { PaginationService } from '../../services/pagination.service';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -31,19 +31,16 @@ export class MessagesDbComponent extends BaseComponent implements OnInit {
 
   ngOnInit() {
     this.vm$ = combineLatest([
-      this.paginationService.currentPage$,
-      this.paginationService.currentSize$,
-      this.paginationService.totalCount$,
-      this.paginationService.filterQuery$,
-      this.paginationService.sortBy$
-    ] as const).pipe(
+      this.paginationService.params$, // Dùng lại params$
+      this.paginationService.totalCount$
+    ]).pipe(
       takeUntilDestroyed(this.destroyRef),
-      map(([currentPage, currentSize, totalCount, filterQuery, sortBy]) => ({
+      map(([[currentPage, currentSize, filterQuery, sortBy, /* limit */], totalCount]) => ({
         currentPage,
         currentSize,
         totalCount,
         filterQuery,
-        sortBy,
+        sortBy
       }))
     );
 
@@ -55,12 +52,14 @@ export class MessagesDbComponent extends BaseComponent implements OnInit {
   onPageChanged(newPage: number) {
     this.paginationService.updatePage(newPage);
   }
+
   getTotalPage(totalCount: number, currentSize: number): number {
     return Math.ceil(totalCount / currentSize) || 1;
   }
+
   getPageNumbers(totalCount: number, currentSize: number): number[] {
     const pages: number[] = [];
-    const totalPages = Math.ceil(totalCount / currentSize) || 1; // Đảm bảo ít nhất 1 trang
+    const totalPages = Math.ceil(totalCount / currentSize) || 1;
     for (let i = 1; i <= totalPages; i++) {
       pages.push(i);
     }
@@ -69,10 +68,9 @@ export class MessagesDbComponent extends BaseComponent implements OnInit {
 
   onPageSelected(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
-    const newPage = +selectElement.value; // Lấy giá trị trang từ dropdown
-    this.paginationService.updatePage(newPage);
+    const newPage = +selectElement.value;
+    this.onPageChanged(newPage);
   }
-
 
   onSizeChanged(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
@@ -95,19 +93,16 @@ export class MessagesDbComponent extends BaseComponent implements OnInit {
           next: (res) => {
             if (res.status === 'success') {
               this.paginationService.removeMessage(messageId);
-              this.notificationService.addNotificaton('success','Delete success', 3000)
+              this.notificationService.addNotificaton('success', 'Delete success', 3000);
             }
           },
           error: (err) => {
-            this.notificationService.addNotificaton('info','Delete failed', 3000)
+            this.notificationService.addNotificaton('info', 'Delete failed', 3000);
           }
         });
       }
     });
-
   }
-
-
 
   updateFilters() {
     const cloneFilter: FilterQuery = { ...this.filterQuery };
@@ -116,8 +111,10 @@ export class MessagesDbComponent extends BaseComponent implements OnInit {
     } else {
       delete cloneFilter.text;
     }
-
     this.paginationService.updateFilterQuery(cloneFilter);
     this.paginationService.updateSortBy(this.sortBy || null);
+  }
+  trackById(index: number, msg: any): string {
+    return msg._id;
   }
 }

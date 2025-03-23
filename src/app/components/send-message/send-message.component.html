@@ -1,0 +1,61 @@
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      <h2>Send a Message</h2>
+      <p>Share your message with Telegram channels, groups, or users.</p>
+    </div>
+    <form (ngSubmit)="onSubmit()" class="card-body">
+      <div class="form-group">
+        <label for="recipient">Recipient</label>
+        <input type="text" id="recipient" [value]="recipient()" (input)="updateRecipient($event)"
+          placeholder="Enter recipient (e.g., @username or chat ID)" required aria-describedby="recipientHelp" />
+        <small id="recipientHelp" class="form-text">Enter a valid Telegram username or chat ID.</small>
+      </div>
+      <div class="form-group">
+        <label for="template">Template Messages</label>
+        <select id="template" (change)="onTemplateChange($event)" class="template-select">
+          <option value="">Select a template...</option>
+          <option value="Hello! How can I assist you today?">Greeting</option>
+          <option value="Thank you for your message. We'll get back to you soon!">Quick Reply</option>
+          <option value="Here's our latest update: [insert details]">Announcement</option>
+        </select>
+        <small class="form-text">Choose a predefined message template.</small>
+      </div>
+
+      <div class="form-group">
+        <label for="text">Message</label>
+        <textarea id="text" [value]="text()" (input)="updateText($event)" placeholder="Type your message here..."
+          required aria-describedby="textHelp"></textarea>
+        <small id="textHelp" class="form-text">Supports emojis, links, and formatting.</small>
+      </div>
+      <div class="form-group">
+        <label for="files">Attach Files</label>
+        <div class="file-upload">
+          <input type="file" id="files" (change)="onFileChange($event)" multiple #fileInput style="display: none;" />
+          <div class="upload-area" (click)="fileInput.click()">
+            <p>Drag and drop files here or click to upload</p>
+            <span class="upload-icon">📎</span>
+          </div>
+          @if (files().length > 0) {
+          <div class="file-list">
+            <p>Selected files:</p>
+            <ul>
+              @for (file of files(); track file) {
+              <li>
+                <span>{{ file.name }}</span>
+                @if (file.type.startsWith('image/')) {
+                <img [appFilePreview]="file" alt="Preview" class="file-preview">
+                }
+              </li>
+              }
+            </ul>
+          </div>
+          }
+        </div>
+      </div>
+      <button type="submit" [disabled]="!isFormValid()" class="submit-btn">
+        <span>Send Message</span>
+      </button>
+    </form>
+  </div>
+</div>

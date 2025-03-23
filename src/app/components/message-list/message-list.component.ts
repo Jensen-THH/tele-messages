@@ -7,10 +7,11 @@ import { BaseComponent } from '../../shared/components/base/base.component';
 import { MessageDetail, SearchParams } from '../../shared/interfaces/interfaces';
 import { Store } from '@ngrx/store';
 import * as Messages from '../../shared/store/actions'
+import { SimpleMessagesListComponent } from '../simple-messages-list/simple-messages-list.component';
 @Component({
   selector: 'app-message-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SimpleMessagesListComponent],
   templateUrl: './message-list.component.html',
   styleUrls: ['./message-list.component.scss'],
   animations: [
@@ -23,7 +24,7 @@ import * as Messages from '../../shared/store/actions'
 export class MessageListComponent extends BaseComponent {
   messages: MessageDetail[] = [];
   private store = inject(Store<{ messages: MessagesState }>);
-  messages$ = this.store.select(state => state.messages.data)
+  messages$ = this.store.select(state => state.messages.data);
   // loading$: Observable<boolean>; 
   // error$: Observable<string | null>;
   searchParams: SearchParams = {
@@ -39,6 +40,12 @@ export class MessageListComponent extends BaseComponent {
   };
   selectedMessage: any = null;
 
+  activeTab: string = 'messages';
+  isDisplay: boolean = false;
+
+  switchTab(tab: string) {
+    this.activeTab = tab;
+  }
 
   constructor() {
     super();

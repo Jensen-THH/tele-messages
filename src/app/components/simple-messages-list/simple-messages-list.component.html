@@ -1,0 +1,62 @@
+<div class="cyberpunk-container">
+    <div class="cyberpunk-header">
+        <h1 class="text-center mb-4">Telegram Messages</h1>
+    </div>
+    <div class="container">
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Text</th>
+                        <th>Date</th>
+                        <th>Reactions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngIf="messages$ | async as messages">
+                        <ng-container *ngIf="messages.length > 0; then thenTemplate; else elseTemplate"></ng-container>
+                        <ng-template #thenTemplate>
+                          <tr *ngFor="let msg of messages">
+                            <td class="truncate" title="{{ msg.text }}">{{ msg.text }}</td>
+                            <td>{{ msg.date | date: 'medium' }}</td>
+                            <td>{{ msg.user_name || 'Unknown' }}</td>
+                            <td>{{ msg.total_reactions || 0 }}</td>
+                          </tr>
+                        </ng-template>
+                        <ng-template #elseTemplate>
+                          <tr>
+                            <td>No data available</td>
+                          </tr>
+                        </ng-template>
+                      </ng-container>
+                </tbody>
+            </table>
+        </div>
+        <div class="container-pagination large">
+            <div class="pagination">
+                <ul>
+                    <li><a href="#"></a></li>
+                    <li><a href="#"></a></li>
+                    <li class="active"><a href="#"></a></li>
+                    <li><a href="#"></a></li>
+                    <li><a href="#"></a></li>
+                    <li><a href="#"></a></li>
+                    <li><a href="#"></a></li>
+                    <li><a href="#"></a></li>
+                    <li><a href="#"></a></li>
+                    <li><a href="#"></a></li>
+                    <li><a href="#"></a></li>
+                    <li><a href="#"></a></li>
+                    <li><a href="#"></a></li>
+                    <li><a href="#"></a></li>
+                    <li><a href="#"></a></li>
+                    <li><a href="#"></a></li>
+                    <li><a href="#"></a></li>
+                    <li><a href="#"></a></li>
+                    <li><a href="#"></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

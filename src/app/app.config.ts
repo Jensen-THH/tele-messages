@@ -17,6 +17,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routeConfig),
     provideEffects(),
     provideStore({ messages: messagesReducer }),
-    provideEffects(MessagesTeleEffects)
+    provideEffects([MessagesTeleEffects]),
 ]
 };
